@@ -1,0 +1,150 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>{{ symbol }}</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.27.2/axios.min.js"></script>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+<body>
+{% include "top_navigation.html" %}
+<div class="container">
+    <div class="row justify-content-center mt-2">
+        <div class="col-md-8">
+            <div class="mb-5">
+                {% include "search.html" %}
+            </div>
+
+            <div class="mb-5">
+                <h1>{{ indicators.company_name }}</h1>
+                <h6><span class="badge text-bg-primary me-2">{{ indicators.industry }}</span> <span class="badge text-bg-primary">{{ indicators.sector }}</span></h6>
+            </div>
+
+            <div class="mb-5">
+                <h3 class="hstack gap-3 mb-3">
+                    <div class="bg-light text-muted">1</div>
+                    <div class="vr"></div>
+                    <div class="bg-light">Indicators</div>
+                </h3>
+
+                <p>
+                    <i class="bi bi-check-square text-success me-2"></i>
+                    If you invested <span class="text-primary fw-bold">{{ indicators.amount_invested.fmt }}</span> last year in <span class="text-primary fw-bold">{{ indicators.company_name }}</span>, you would have received <span class="text-primary fw-bold">{{ indicators.dividends_received.fmt }}</span> in dividends.
+                </p>
+                <p>
+                    <i class="bi bi-check-square text-success me-2"></i>
+                    Current stock price is <span class="text-primary fw-bold">{{ indicators.current_stock_price.fmt }}</span>.
+                </p>
+                <p>
+                    <i class="bi bi-check-square {% if indicators.dividend_yield.raw > 0.01 %}text-success{% else %}text-danger{% endif %} me-2"></i>
+                    Dividend yield is <span class="text-primary fw-bold">{{ indicators.dividend_yield.fmt }}</span>.
+                </p>
+                <p>
+                    <i class="bi bi-check-square {% if indicators.dividends_received.raw > 1 %}text-success{% else %}text-danger{% endif %} me-2"></i>
+                    Company had a dividend of <span class="text-primary fw-bold">{{ indicators.dividends_received.fmt }}</span> last year.
+                </p>
+                <p>
+                    <i class="bi bi-check-square {% if indicators.average_dividend_yearly_growth.raw > 0.1 %}text-success{% else %}text-danger{% endif %} me-2"></i>
+                    Average dividend growth is <span class="text-primary fw-bold">{{ indicators.average_dividend_yearly_growth.fmt }}</span> per year for the past 5 years.
+                </p>
+                <p>
+                    <i class="bi bi-check-square {% if indicators.dividend_length.raw > 5 %}text-success{% else %}text-danger{% endif %} me-2"></i>
+                    Company is paying dividends for the past <span class="text-primary fw-bold">{{ indicators.dividend_length.fmt }}</span>.
+                </p>
+            </div>
+
+            <div class="mb-5">
+                <h3 class="hstack gap-3 mb-3">
+                    <div class="bg-light text-muted">2</div>
+                    <div class="vr"></div>
+                    <div class="bg-light">Prediction Model</div>
+                </h3>
+                <table class="table table-dark table-striped">
+                    <thead>
+                        <tr>
+                            {% for label in model_table.labels %}
+                                <th scope="col">{{ label }}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for col in model_table.data %}
+                            <tr>
+                                {% for cell in col %}
+                                    <th scope="row">{{ cell }}</th>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                <form method="GET">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" name="amount" value="{{ amount }}">
+                        <input type="text" class="form-control" name="years" value="{{ years }}">
+                        <button class="btn btn-outline-secondary" type="submit">Update</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="mb-5">
+                <h3 class="hstack gap-3 mb-3">
+                    <div class="bg-light text-muted">3</div>
+                    <div class="vr"></div>
+                    <div class="bg-light">Payout Ratio</div>
+                </h3>
+                <table class="table table-dark table-striped">
+                    <thead>
+                        <tr>
+                            {% for label in payout_ratio_table.labels %}
+                                <th scope="col">{{ label }}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for col in payout_ratio_table.data %}
+                            <tr>
+                                {% for cell in col %}
+                                    {% if loop.index == loop.length %}
+                                        <th scope="row" class="{% if cell < 100 %}text-success{% else %}text-danger{% endif %}">{{ cell }}%</th>
+                                    {% else %}
+                                        <th scope="row">{{ cell }}</th>
+                                    {% endif %}
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="mb-5">
+                <h3 class="hstack gap-3 mb-3">
+                    <div class="bg-light text-muted">4</div>
+                    <div class="vr"></div>
+                    <div class="bg-light">Historic Dividends</div>
+                </h3>
+
+                {% include "historic_dividends_bar_chart.html" %}
+            </div>
+
+            <div class="mb-5">
+                <h3 class="hstack gap-3 mb-3">
+                    <div class="bg-light text-muted">5</div>
+                    <div class="vr"></div>
+                    <div class="bg-light">Dividend Yield</div>
+                </h3>
+
+                {% include "dividend_yield_line_chart.html" %}
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

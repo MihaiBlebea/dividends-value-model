@@ -1,0 +1,77 @@
+{% set random_id = random_id() %}
+<canvas id="{{ random_id }}" class="mt-5" height="120"></canvas>
+
+<script>
+(function() {
+    axios.get("/api/v1/historic-dividends/{{ symbol }}").then((res)=> {
+        let dividends = res.data.data
+
+        axios.get("/api/v1/historic-prices/{{ symbol }}").then((res)=> {
+            let prices = res.data.data
+            console.log(Object.values(prices).map((price)=> price["close"]))
+            let ctx = document.getElementById("{{ random_id }}")
+            let myChart = new Chart(ctx, {
+                type: "line",
+                data: {
+                    labels: Object.keys(prices),
+                    datasets: [
+                        {
+                            label: "Dividends",
+                            data: Object.values(dividends),
+                            backgroundColor: [
+                                "rgba(255, 99, 132, 0.2)",
+                                "rgba(54, 162, 235, 0.2)",
+                                "rgba(255, 206, 86, 0.2)",
+                                "rgba(75, 192, 192, 0.2)",
+                                "rgba(153, 102, 255, 0.2)",
+                                "rgba(255, 159, 64, 0.2)"
+                            ],
+                            borderColor: [
+                                "rgba(255, 99, 132, 1)",
+                                "rgba(54, 162, 235, 1)",
+                                "rgba(255, 206, 86, 1)",
+                                "rgba(75, 192, 192, 1)",
+                                "rgba(153, 102, 255, 1)",
+                                "rgba(255, 159, 64, 1)"
+                            ],
+                            borderWidth: 1
+                        },
+                        {
+                            label: "Prices",
+                            data: Object.values(prices).map((price)=> price["close"]),
+                            backgroundColor: [
+                                "rgba(255, 99, 132, 0.2)",
+                                "rgba(54, 162, 235, 0.2)",
+                                "rgba(255, 206, 86, 0.2)",
+                                "rgba(75, 192, 192, 0.2)",
+                                "rgba(153, 102, 255, 0.2)",
+                                "rgba(255, 159, 64, 0.2)"
+                            ],
+                            borderColor: [
+                                "rgba(255, 99, 132, 1)",
+                                "rgba(54, 162, 235, 1)",
+                                "rgba(255, 206, 86, 1)",
+                                "rgba(75, 192, 192, 1)",
+                                "rgba(153, 102, 255, 1)",
+                                "rgba(255, 159, 64, 1)"
+                            ],
+                            borderWidth: 1
+                        },
+                    ]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            })
+        }).catch((err)=> {
+            console.error(err)
+        })
+    }).catch((err)=> {
+        console.error(err)
+    })
+})()
+</script>
