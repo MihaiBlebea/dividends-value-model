@@ -46,8 +46,8 @@
                     Dividend yield is <span class="text-primary fw-bold">{{ indicators.dividend_yield.fmt }}</span>.
                 </p>
                 <p>
-                    <i class="bi bi-check-square {% if indicators.dividends_received.raw > 1 %}text-success{% else %}text-danger{% endif %} me-2"></i>
-                    Company had a dividend of <span class="text-primary fw-bold">{{ indicators.dividends_received.fmt }}</span> last year.
+                    <i class="bi bi-check-square {% if indicators.dividend_per_stock.raw > 1 %}text-success{% else %}text-danger{% endif %} me-2"></i>
+                    Company had a dividend of <span class="text-primary fw-bold">{{ indicators.dividend_per_stock.fmt }}</span> last year.
                 </p>
                 <p>
                     <i class="bi bi-check-square {% if indicators.average_dividend_yearly_growth.raw > 0.1 %}text-success{% else %}text-danger{% endif %} me-2"></i>
