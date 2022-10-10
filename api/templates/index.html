@@ -125,12 +125,12 @@
 							{% for col in payout_ratio_table.data %}
 							<tr>
 								{% for cell in col %}
-								{% if loop.index == loop.length %}
-								<th scope="row" class="{% if cell < 100 %}text-success{% else %}text-danger{% endif %}">
-									{{ cell }}%</th>
-								{% else %}
-								<th scope="row">{{ cell }}</th>
-								{% endif %}
+									{% if loop.index == loop.length %}
+									<th scope="row" class="{% if cell > 100 or cell < 0 %}text-danger{% else %}text-success{% endif %}">
+										{{ cell }}%</th>
+									{% else %}
+									<th scope="row">{{ cell }}</th>
+									{% endif %}
 								{% endfor %}
 							</tr>
 							{% endfor %}

@@ -5,7 +5,7 @@ from src.utils import cache_factory
 
 class HistoricPrices:
 
-	@cache_factory("./cache", "historic_prices", ttl_sec=60 * 60 * 24)
+	@cache_factory("./cache", "prices", ttl_sec=60 * 60 * 24)
 	def get_data(self, symbol: str, interval: str = "1mo")-> dict:
 		url = "https://query2.finance.yahoo.com/v8/finance/chart/{symbol}?range={range}&interval={interval}"
 		res = re.get(

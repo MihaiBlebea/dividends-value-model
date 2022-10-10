@@ -1,92 +1,138 @@
-from deta import Deta
-import random
-import string
-from flask import Flask, jsonify, request, render_template
-import os
+from flask import Flask, jsonify, request
+from src.dividend_indicator import DividendIndicator
+from src.dividend_calculator import DividendCalculator
 
-from src.main import DividendModel
-
-
-
-# deta = Deta(os.getenv("PROJECT_KEY"))
-
-# users = deta.Base("users")
 
 app = Flask(__name__)
 
 API_V1 = "/api/v1"
 
-@app.route("/model/<symbol>")
-def index(symbol: str):
+@app.route("/", methods=["GET"])
+def index():
 	try:
-		amount = request.args.get("amount", 20_000, type=int)
-		years = request.args.get("years", 10, type=int)
-
-		dm = DividendModel(symbol)
-		app.jinja_env.globals.update( 
-			random_id=lambda: "".join(random.choice(string.ascii_letters) for i in range(8)).lower() 
-		)
-		return render_template(
-			"index.html", 
-			symbol = symbol.upper(),
-			amount = amount,
-			years = years,
-			indicators = dm.get_indicators(amount),
-			model_table = dm.get_model_table(amount, years),
-			payout_ratio_table = dm.get_payout_ratio_table(),
-			dividend_yield_table = dm.get_dividend_yield_table(),
-		), 200
-	except Exception as err:
-		raise err
-		return render_template(
-			"error.html", 
-			error = str(err),
-		), 500
-
-@app.route(f"{API_V1}/historic-dividends/<symbol>")
-def historic_dividends(symbol: str):
-	try:
-		dm = DividendModel(symbol)
 		return jsonify({
 			"status": "OK",
-			"data": dm.get_dividends_per_year()
+			"data": [
+				f"{API_V1}/dividends/AAPL/future-earnings",
+				f"{API_V1}/dividends/AAPL/dividends-per-month",
+				f"{API_V1}/dividends/AAPL/years-till-recoup",
+				f"{API_V1}/dividends/AAPL/historic-per-year",
+				f"{API_V1}/dividends/AAPL/dividends-for-investment",
+				f"{API_V1}/dividends/AAPL/indicators"
+			]
 		}), 200
 	except Exception as err:
-		raise err
 		return jsonify({
 			"status": "ERROR",
 			"error": str(err)
 		}), 500
 
-@app.route(f"{API_V1}/historic-prices/<symbol>")
-def historic_prices(symbol: str):
+@app.route(f"{API_V1}/dividends/<symbol>/future-earnings", methods=["GET"])
+def get_future_earnings(symbol: str):
 	try:
-		dm = DividendModel(symbol)
+		args = request.args
+		invest_amount = args.get("invest-amount", type=float, default=20_000)
+		years = args.get("years", type=int, default=10)
+		reinvest_dividends = args.get("reinvest-dividends", type=bool, default=True)
+		reinvest_annualy = args.get("reinvest-annualy", type=bool, default=True)
+		dc = DividendCalculator(symbol)
 		return jsonify({
 			"status": "OK",
-			"data": dm.get_prices_per_year()
+			"data": dc.predict_future_earnings(
+				invest_amount, 
+				years, 
+				reinvest_dividends, 
+				reinvest_annualy,
+			)
 		}), 200
 	except Exception as err:
-		raise err
 		return jsonify({
 			"status": "ERROR",
 			"error": str(err)
 		}), 500
 
-@app.route(f"{API_V1}/historic-dividend-yield/<symbol>")
-def historic_dividend_yield(symbol: str):
+@app.route(f"{API_V1}/dividends/<symbol>/dividends-per-month", methods=["GET"])
+def get_invest_for_dividend_per_month(symbol: str):
 	try:
-		dm = DividendModel(symbol)
+		args = request.args
+		dividend_per_month = args.get("dividend-per-month", type=float, default=1_000)
+		dc = DividendCalculator(symbol)
 		return jsonify({
 			"status": "OK",
-			"data": dm.get_dividend_yield_per_year()
+			"data": dc.invest_for_dividend_per_month(dividend_per_month)
 		}), 200
 	except Exception as err:
-		raise err
 		return jsonify({
 			"status": "ERROR",
 			"error": str(err)
 		}), 500
+
+@app.route(f"{API_V1}/dividends/<symbol>/years-till-recoup", methods=["GET"])
+def get_years_till_recoup_investment(symbol: str):
+	try:
+		dc = DividendCalculator(symbol)
+		return jsonify({
+			"status": "OK",
+			"data": dc.years_till_recoup_investment()
+		}), 200
+	except Exception as err:
+		return jsonify({
+			"status": "ERROR",
+			"error": str(err)
+		}), 500
+
+@app.route(f"{API_V1}/dividends/<symbol>/historic-per-year", methods=["GET"])
+def get_historic_per_year(symbol: str):
+	try:
+		dc = DividendCalculator(symbol)
+		return jsonify({
+			"status": "OK",
+			"data": dc.get_dividends_per_year()
+		}), 200
+	except Exception as err:
+		return jsonify({
+			"status": "ERROR",
+			"error": str(err)
+		}), 500
+
+@app.route(f"{API_V1}/dividends/<symbol>/dividends-for-investment", methods=["GET"])
+def get_dividends_for_investment(symbol: str):
+	try:
+		args = request.args
+		invest_amount = args.get("invest-amount", type=float, default=20_000)
+
+		dc = DividendCalculator(symbol)
+		return jsonify({
+			"status": "OK",
+			"data": dc.dividends_for_amount_invested(invest_amount)
+		}), 200
+	except Exception as err:
+		return jsonify({
+			"status": "ERROR",
+			"error": str(err)
+		}), 500
+
+@app.route(f"{API_V1}/dividends/<symbol>/indicators", methods=["GET"])
+def get_indicators(symbol: str):
+	try:
+		dc = DividendCalculator(symbol)
+		di = DividendIndicator(symbol)
+		return jsonify({
+			"status": "OK",
+			"data": {
+				"dividend_yield": di.get_dividend_yield(),
+				"current_dividend_amount": dc.current_year_div_per_share(),
+				"dividend_growth": dc.get_yearly_dividend_growth(5),
+				"dividend_ratios_per_year": di.get_yearly_ratios(),
+				"cadi": dc.get_cadi(),
+			}
+		}), 200
+	except Exception as err:
+		return jsonify({
+			"status": "ERROR",
+			"error": str(err)
+		}), 500
+
 
 if __name__ == "__main__":
 	app.run(debug=True, host="0.0.0.0", port=8080)

@@ -1,0 +1,458 @@
+[
+    {
+        "amount": 0.000536,
+        "date": 547738200,
+        "datetime": "11-05-1987",
+        "currency": "USD"
+    },
+    {
+        "amount": 0.000536,
+        "date": 555600600,
+        "datetime": "10-08-1987",
+        "currency": "USD"
+    },
+    {
+        "amount": 0.000714,
+        "date": 564157800,
+        "datetime": "17-11-1987",
+        "currency": "USD"
+    },
+    {
+        "amount": 0.000714,
+        "date": 571674600,
+        "datetime": "12-02-1988",
+        "currency": "USD"
+    },
+    {
+        "amount": 0.000714,
+        "date": 579792600,
+        "datetime": "16-05-1988",
+        "currency": "USD"
+    },
+    {
+        "amount": 0.000714,
+        "date": 587655000,
+        "datetime": "15-08-1988",
+        "currency": "USD"
+    },
+    {
+        "amount": 0.000893,
+        "date": 596125800,
+        "datetime": "21-11-1988",
+        "currency": "USD"
+    },
+    {
+        "amount": 0.000893,
+        "date": 603729000,
+        "datetime": "17-02-1989",
+        "currency": "USD"
+    },
+    {
+        "amount": 0.000893,
+        "date": 611847000,
+        "datetime": "22-05-1989",
+        "currency": "USD"
+    },
+    {
+        "amount": 0.000893,
+        "date": 619709400,
+        "datetime": "21-08-1989",
+        "currency": "USD"
+    },
+    {
+        "amount": 0.000982,
+        "date": 627316200,
+        "datetime": "17-11-1989",
+        "currency": "USD"
+    },
+    {
+        "amount": 0.000982,
+        "date": 635178600,
+        "datetime": "16-02-1990",
+        "currency": "USD"
+    },
+    {
+        "amount": 0.000982,
+        "date": 643296600,
+        "datetime": "21-05-1990",
+        "currency": "USD"
+    },
+    {
+        "amount": 0.000982,
+        "date": 651159000,
+        "datetime": "20-08-1990",
+        "currency": "USD"
+    },
+    {
+        "amount": 0.001071,
+        "date": 658765800,
+        "datetime": "16-11-1990",
+        "currency": "USD"
+    },
+    {
+        "amount": 0.001071,
+        "date": 666628200,
+        "datetime": "15-02-1991",
+        "currency": "USD"
+    },
+    {
+        "amount": 0.001071,
+        "date": 674746200,
+        "datetime": "20-05-1991",
+        "currency": "USD"
+    },
+    {
+        "amount": 0.001071,
+        "date": 682608600,
+        "datetime": "19-08-1991",
+        "currency": "USD"
+    },
+    {
+        "amount": 0.001071,
+        "date": 690474600,
+        "datetime": "18-11-1991",
+        "currency": "USD"
+    },
+    {
+        "amount": 0.001071,
+        "date": 698077800,
+        "datetime": "14-02-1992",
+        "currency": "USD"
+    },
+    {
+        "amount": 0.001071,
+        "date": 707405400,
+        "datetime": "01-06-1992",
+        "currency": "USD"
+    },
+    {
+        "amount": 0.001071,
+        "date": 714058200,
+        "datetime": "17-08-1992",
+        "currency": "USD"
+    },
+    {
+        "amount": 0.001071,
+        "date": 723133800,
+        "datetime": "30-11-1992",
+        "currency": "USD"
+    },
+    {
+        "amount": 0.001071,
+        "date": 729527400,
+        "datetime": "12-02-1993",
+        "currency": "USD"
+    },
+    {
+        "amount": 0.001071,
+        "date": 738595800,
+        "datetime": "28-05-1993",
+        "currency": "USD"
+    },
+    {
+        "amount": 0.001071,
+        "date": 745507800,
+        "datetime": "16-08-1993",
+        "currency": "USD"
+    },
+    {
+        "amount": 0.001071,
+        "date": 753719400,
+        "datetime": "19-11-1993",
+        "currency": "USD"
+    },
+    {
+        "amount": 0.001071,
+        "date": 760631400,
+        "datetime": "07-02-1994",
+        "currency": "USD"
+    },
+    {
+        "amount": 0.001071,
+        "date": 770045400,
+        "datetime": "27-05-1994",
+        "currency": "USD"
+    },
+    {
+        "amount": 0.001071,
+        "date": 776957400,
+        "datetime": "15-08-1994",
+        "currency": "USD"
+    },
+    {
+        "amount": 0.001071,
+        "date": 785169000,
+        "datetime": "18-11-1994",
+        "currency": "USD"
+    },
+    {
+        "amount": 0.001071,
+        "date": 792685800,
+        "datetime": "13-02-1995",
+        "currency": "USD"
+    },
+    {
+        "amount": 0.001071,
+        "date": 801495000,
+        "datetime": "26-05-1995",
+        "currency": "USD"
+    },
+    {
+        "amount": 0.001071,
+        "date": 808579800,
+        "datetime": "16-08-1995",
+        "currency": "USD"
+    },
+    {
+        "amount": 0.001071,
+        "date": 816964200,
+        "datetime": "21-11-1995",
+        "currency": "USD"
+    },
+    {
+        "amount": 0.094643,
+        "date": 1344519000,
+        "datetime": "09-08-2012",
+        "currency": "USD"
+    },
+    {
+        "amount": 0.094643,
+        "date": 1352298600,
+        "datetime": "07-11-2012",
+        "currency": "USD"
+    },
+    {
+        "amount": 0.094643,
+        "date": 1360247400,
+        "datetime": "07-02-2013",
+        "currency": "USD"
+    },
+    {
+        "amount": 0.108929,
+        "date": 1368106200,
+        "datetime": "09-05-2013",
+        "currency": "USD"
+    },
+    {
+        "amount": 0.108929,
+        "date": 1375968600,
+        "datetime": "08-08-2013",
+        "currency": "USD"
+    },
+    {
+        "amount": 0.108929,
+        "date": 1383748200,
+        "datetime": "06-11-2013",
+        "currency": "USD"
+    },
+    {
+        "amount": 0.108929,
+        "date": 1391697000,
+        "datetime": "06-02-2014",
+        "currency": "USD"
+    },
+    {
+        "amount": 0.1175,
+        "date": 1399555800,
+        "datetime": "08-05-2014",
+        "currency": "USD"
+    },
+    {
+        "amount": 0.1175,
+        "date": 1407418200,
+        "datetime": "07-08-2014",
+        "currency": "USD"
+    },
+    {
+        "amount": 0.1175,
+        "date": 1415284200,
+        "datetime": "06-11-2014",
+        "currency": "USD"
+    },
+    {
+        "amount": 0.1175,
+        "date": 1423146600,
+        "datetime": "05-02-2015",
+        "currency": "USD"
+    },
+    {
+        "amount": 0.13,
+        "date": 1431005400,
+        "datetime": "07-05-2015",
+        "currency": "USD"
+    },
+    {
+        "amount": 0.13,
+        "date": 1438867800,
+        "datetime": "06-08-2015",
+        "currency": "USD"
+    },
+    {
+        "amount": 0.13,
+        "date": 1446733800,
+        "datetime": "05-11-2015",
+        "currency": "USD"
+    },
+    {
+        "amount": 0.13,
+        "date": 1454596200,
+        "datetime": "04-02-2016",
+        "currency": "USD"
+    },
+    {
+        "amount": 0.1425,
+        "date": 1462455000,
+        "datetime": "05-05-2016",
+        "currency": "USD"
+    },
+    {
+        "amount": 0.1425,
+        "date": 1470317400,
+        "datetime": "04-08-2016",
+        "currency": "USD"
+    },
+    {
+        "amount": 0.1425,
+        "date": 1478179800,
+        "datetime": "03-11-2016",
+        "currency": "USD"
+    },
+    {
+        "amount": 0.1425,
+        "date": 1486650600,
+        "datetime": "09-02-2017",
+        "currency": "USD"
+    },
+    {
+        "amount": 0.1575,
+        "date": 1494509400,
+        "datetime": "11-05-2017",
+        "currency": "USD"
+    },
+    {
+        "amount": 0.1575,
+        "date": 1502371800,
+        "datetime": "10-08-2017",
+        "currency": "USD"
+    },
+    {
+        "amount": 0.1575,
+        "date": 1510324200,
+        "datetime": "10-11-2017",
+        "currency": "USD"
+    },
+    {
+        "amount": 0.1575,
+        "date": 1518186600,
+        "datetime": "09-02-2018",
+        "currency": "USD"
+    },
+    {
+        "amount": 0.1825,
+        "date": 1526045400,
+        "datetime": "11-05-2018",
+        "currency": "USD"
+    },
+    {
+        "amount": 0.1825,
+        "date": 1533907800,
+        "datetime": "10-08-2018",
+        "currency": "USD"
+    },
+    {
+        "amount": 0.1825,
+        "date": 1541687400,
+        "datetime": "08-11-2018",
+        "currency": "USD"
+    },
+    {
+        "amount": 0.1825,
+        "date": 1549636200,
+        "datetime": "08-02-2019",
+        "currency": "USD"
+    },
+    {
+        "amount": 0.1925,
+        "date": 1557495000,
+        "datetime": "10-05-2019",
+        "currency": "USD"
+    },
+    {
+        "amount": 0.1925,
+        "date": 1565357400,
+        "datetime": "09-08-2019",
+        "currency": "USD"
+    },
+    {
+        "amount": 0.1925,
+        "date": 1573137000,
+        "datetime": "07-11-2019",
+        "currency": "USD"
+    },
+    {
+        "amount": 0.1925,
+        "date": 1581085800,
+        "datetime": "07-02-2020",
+        "currency": "USD"
+    },
+    {
+        "amount": 0.205,
+        "date": 1588944600,
+        "datetime": "08-05-2020",
+        "currency": "USD"
+    },
+    {
+        "amount": 0.205,
+        "date": 1596807000,
+        "datetime": "07-08-2020",
+        "currency": "USD"
+    },
+    {
+        "amount": 0.205,
+        "date": 1604673000,
+        "datetime": "06-11-2020",
+        "currency": "USD"
+    },
+    {
+        "amount": 0.205,
+        "date": 1612535400,
+        "datetime": "05-02-2021",
+        "currency": "USD"
+    },
+    {
+        "amount": 0.22,
+        "date": 1620394200,
+        "datetime": "07-05-2021",
+        "currency": "USD"
+    },
+    {
+        "amount": 0.22,
+        "date": 1628256600,
+        "datetime": "06-08-2021",
+        "currency": "USD"
+    },
+    {
+        "amount": 0.22,
+        "date": 1636119000,
+        "datetime": "05-11-2021",
+        "currency": "USD"
+    },
+    {
+        "amount": 0.22,
+        "date": 1643985000,
+        "datetime": "04-02-2022",
+        "currency": "USD"
+    },
+    {
+        "amount": 0.23,
+        "date": 1651843800,
+        "datetime": "06-05-2022",
+        "currency": "USD"
+    },
+    {
+        "amount": 0.23,
+        "date": 1659706200,
+        "datetime": "05-08-2022",
+        "currency": "USD"
+    }
+]
