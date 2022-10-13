@@ -10,15 +10,16 @@ API_V1 = "/api/v1"
 @app.route("/", methods=["GET"])
 def index():
 	try:
+        host = request.host
 		return jsonify({
 			"status": "OK",
 			"data": [
-				f"{API_V1}/dividends/AAPL/future-earnings",
-				f"{API_V1}/dividends/AAPL/dividends-per-month",
-				f"{API_V1}/dividends/AAPL/years-till-recoup",
-				f"{API_V1}/dividends/AAPL/historic-per-year",
-				f"{API_V1}/dividends/AAPL/dividends-for-investment",
-				f"{API_V1}/dividends/AAPL/indicators"
+				f"{host}{API_V1}/dividends/AAPL/future-earnings",
+				f"{host}{API_V1}/dividends/AAPL/dividends-per-month",
+				f"{host}{API_V1}/dividends/AAPL/years-till-recoup",
+				f"{host}{API_V1}/dividends/AAPL/historic-per-year",
+				f"{host}{API_V1}/dividends/AAPL/dividends-for-investment",
+				f"{host}{API_V1}/dividends/AAPL/indicators"
 			]
 		}), 200
 	except Exception as err:
