@@ -4,6 +4,9 @@ import json
 import time
 import os
 from deta import Drive
+from currency_converter import CurrencyConverter
+
+
 
 DETA_DRIVER_NAME = "dividend-calculator"
 
@@ -87,4 +90,11 @@ def growth_in_percentage(data: List[float])-> List[float]:
 
 	return res
 
+def to_GBP(amount: float, from_currency: str)-> float:
+	if from_currency == "GBp":
+		return amount / 100
+
+	cc = CurrencyConverter()
+
+	return cc.convert(amount, from_currency, "GBP")
 

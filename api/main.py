@@ -10,7 +10,7 @@ API_V1 = "/api/v1"
 @app.route("/", methods=["GET"])
 def index():
 	try:
-        host = request.host
+		host = request.host_url.rstrip("/")
 		return jsonify({
 			"status": "OK",
 			"data": [
@@ -36,17 +36,21 @@ def get_future_earnings(symbol: str):
 		years = args.get("years", type=int, default=10)
 		reinvest_dividends = args.get("reinvest-dividends", type=bool, default=True)
 		reinvest_annualy = args.get("reinvest-annualy", type=bool, default=True)
+
 		dc = DividendCalculator(symbol)
+		result = dc.predict_future_earnings(
+			invest_amount,
+			years, 
+			reinvest_dividends, 
+			reinvest_annualy,
+		)
+
 		return jsonify({
 			"status": "OK",
-			"data": dc.predict_future_earnings(
-				invest_amount, 
-				years, 
-				reinvest_dividends, 
-				reinvest_annualy,
-			)
+			"data": result
 		}), 200
 	except Exception as err:
+		raise err
 		return jsonify({
 			"status": "ERROR",
 			"error": str(err)

@@ -25,9 +25,6 @@ class DividendCalculator:
 			if dt.year not in dividends:
 				dividends[dt.year] = 0
 
-			if d["currency"] == "GBp":
-				d["amount"] = d["amount"] / 100
-
 			dividends[dt.year] += d["amount"]
 
 		return dividends

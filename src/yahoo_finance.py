@@ -1,7 +1,11 @@
 import requests as re
 import time
 from datetime import datetime
-from src.utils import cache_factory, safeget
+from src.utils import (
+	cache_factory, 
+	safeget, 
+	to_GBP,
+)
 
 
 class YahooFinance:
@@ -30,17 +34,18 @@ class YahooFinance:
 		body = res.json()
 		raw = safeget(body, "chart", "result", 0, "events", "dividends")
 		assert raw is not None, f"Company {symbol} is not paying dividends"
-		
-		return [
-			{
+
+		def format_dividend(div: dict)-> dict:
+			currency = safeget(body, "chart", "result", 0, "meta", "currency")
+			amount = safeget(div, "amount")
+
+			return {
 				**div, 
 				"datetime": datetime.fromtimestamp(div["date"]).strftime("%d-%m-%Y"),
-				"amount": safeget(div, "amount"),
-				"currency": safeget(body, "chart", "result", 0, "meta", "currency"),
-			} 
-			for div in
-			list(raw.values())
-		]
+				"amount": to_GBP(amount, currency),
+			}
+
+		return [ format_dividend(div) for div in list(raw.values()) ]
 
 	@cache_factory("./cache", "prices", ttl_sec=60 * 60 * 24)
 	def get_historic_prices(self, symbol: str, interval: str = "1mo")-> dict:
@@ -75,11 +80,7 @@ class YahooFinance:
 	def get_current_price(self, symbol: str)-> float:
 		price = safeget(self.get_ticker_info(symbol), "quoteSummary", "result", 0, "price", "regularMarketPrice", "raw")
 
-		if self.get_currency(symbol) == "GBp":
-			price = price / 100
-
-		return price
-
+		return to_GBP(price,  self.get_currency(symbol))
 
 
 if __name__ == "__main__":
