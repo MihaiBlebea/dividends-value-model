@@ -7,7 +7,6 @@ from src.yahoo_finance import YahooFinance
 from src.utils import calc_percentage_diff
 
 
-
 class DividendCalculator:
 
 	def __init__(self, symbol: str, yahoo_finance: YahooFinance = None)-> None:
