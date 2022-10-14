@@ -2,7 +2,7 @@
 
 ## To do:
 
-- [ ] Convert amounts to selected currency
+- [x] Convert amounts to selected currency
 
 
 ## Issues:
