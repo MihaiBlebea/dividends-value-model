@@ -50,7 +50,6 @@ def get_future_earnings(symbol: str):
 			"data": result
 		}), 200
 	except Exception as err:
-		raise err
 		return jsonify({
 			"status": "ERROR",
 			"error": str(err)
@@ -126,6 +125,7 @@ def get_indicators(symbol: str):
 			"status": "OK",
 			"data": {
 				"dividend_yield": di.get_dividend_yield(),
+				"current_price": di.get_current_price(),
 				"current_dividend_amount": dc.current_year_div_per_share(),
 				"dividend_growth": dc.get_yearly_dividend_growth(5),
 				"dividend_ratios_per_year": di.get_yearly_ratios(),
