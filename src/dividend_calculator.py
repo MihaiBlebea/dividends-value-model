@@ -134,12 +134,19 @@ class DividendCalculator:
 
 	def get_cadi(self)-> int:
 		divs = list(self.get_dividends_per_year().values())
-		sorted_divs = list(sort(divs))
+		divs.reverse()
 		cadi = 0
 
-		for i in range(len(divs) - 1, -1, -1):
-			if divs[i] == sorted_divs[i]:
-				cadi += 1
+		for i in range(len(divs)):
+			cadi += 1
+
+			if i + 1 == len(divs):
+				break
+
+			if divs[i] < divs[i + 1]:
+				break
 
 		return cadi
+
+
 
