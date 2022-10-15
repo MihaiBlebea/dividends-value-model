@@ -143,15 +143,3 @@ class DividendCalculator:
 
 		return cadi
 
-
-if __name__ == "__main__":
-	from pprint import pprint
-	div_calc = DividendCalculator("AAPL")
-	# res = div_calc.predict_future_earnings(20_000, 10, True, True)
-	# res = div_calc.invest_for_dividend_per_month(1_000)
-
-	res = div_calc.get_cadi()
-
-	pprint(res)
-
-
