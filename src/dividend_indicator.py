@@ -16,6 +16,11 @@ class DividendIndicator:
 
 		return div_yield if div_yield is not None else 0
 
+	def get_beta(self)-> float:
+		data = self.yf.get_ticker_info(self.symbol)
+
+		return safeget(data, "quoteSummary", "result", 0, "defaultKeyStatistics", "beta", "raw")
+
 	def get_current_price(self)-> float:
 		return self.yf.get_current_price(self.symbol)
 

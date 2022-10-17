@@ -1,8 +1,6 @@
 from typing import Dict, List
 from datetime import datetime
 from math import floor
-
-from numpy import sort
 from src.yahoo_finance import YahooFinance
 from src.utils import calc_percentage_diff
 
@@ -147,6 +145,10 @@ class DividendCalculator:
 				break
 
 		return cadi
+
+	def dividend_discount_model(self, ror: float = 0.1)-> float:
+		print(self.current_year_div_per_share(), ror, self.get_yearly_dividend_growth(5))
+		return self.current_year_div_per_share() / (ror - self.get_yearly_dividend_growth(5))
 
 
 
