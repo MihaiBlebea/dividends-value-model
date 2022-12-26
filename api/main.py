@@ -130,6 +130,8 @@ def get_indicators(symbol: str):
                         "dividend_ratios_per_year": di.get_yearly_ratios(),
                         "cadi": dc.get_cadi(),
                         "beta": di.get_beta(),
+                        "pe_ratio": di.get_pe_ratio(),
+                        "market_cap": di.get_market_cap(),
                     },
                 }
             ),
