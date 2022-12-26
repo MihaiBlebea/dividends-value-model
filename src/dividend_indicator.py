@@ -50,6 +50,19 @@ class DividendIndicator:
             "raw",
         )
 
+    def get_eps_ratio(self) -> float:
+        data = self.yf.get_ticker_info(self.symbol)
+
+        return safeget(
+            data,
+            "quoteSummary",
+            "result",
+            0,
+            "defaultKeyStatistics",
+            "trailingEps",
+            "raw",
+        )
+
     def get_current_price(self) -> float:
         return self.yf.get_current_price(self.symbol)
 
