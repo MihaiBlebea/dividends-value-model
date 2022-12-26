@@ -131,7 +131,7 @@ def get_indicators(symbol: str):
                         "cadi": dc.get_cadi(),
                         "beta": di.get_beta(),
                         "pe_ratio": di.get_pe_ratio(),
-                        "get_eps_ratio": di.get_eps_ratio(),
+                        "eps_ratio": di.get_eps_ratio(),
                         "market_cap": di.get_market_cap(),
                     },
                 }
