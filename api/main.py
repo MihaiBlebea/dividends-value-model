@@ -140,7 +140,7 @@ def get_indicators(symbol: str):
 
 
 @app.route(f"{API_V1}/dividends/<symbol>/company-basics", methods=["GET"])
-def get_indicators(symbol: str):
+def get_company_basics(symbol: str):
     try:
         t = Ticker(symbol)
         return (
