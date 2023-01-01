@@ -78,7 +78,10 @@
                     {% endif %}
                 </div>
 
-				<h2 class="mb-2">Stocks information</h2>
+				<h2 class="mb-2" id="stock-information">
+                    Stocks information 
+                    <a href="#stock-information"><i class="bi bi-link-45deg"></i></a>
+                </h2>
 
                 <div class="table-responsive">
                     <table class="table table-dark table-striped table-hover text-nowrap">
@@ -103,7 +106,10 @@
                     </table>
                 </div>
 
-                <h2 class="mb-2">Fundamentals</h2>
+                <h2 class="mb-2" id="fundamentals">
+                    Fundamentals
+                    <a href="#fundamentals"><i class="bi bi-link-45deg"></i></a>
+                </h2>
 
                 <div class="table-responsive">
                     <table class="table table-dark table-striped table-hover text-nowrap">
@@ -128,10 +134,18 @@
                             {% for s in stocks %}
                             <tr>
                                 <td>{{ s.company_name }}</td>
-                                <td>{{ (s.market_cap / 1_000_000) | to_int | to_gbp_fmt }}</td>
-                                <td>{{ "%0.2f" % s.pe_ratio }}</td>
-                                <td>{{ s.eps_ratio }}</td>
-                                <td class="{% if s.trailing_average_div_yield > s.dividend_yield %}text-danger{% else %}text-success{% endif %}">{{ s.dividend_yield | to_percentage }}</td>
+                                <td class="{% if portfolio.average_market_cap > s.market_cap %}text-warning{% endif %}">
+                                    {{ (s.market_cap / 1_000_000) | to_int | to_gbp_fmt }}
+                                </td>
+                                <td class="{% if portfolio.average_pe < s.pe_ratio %}text-warning{% endif %}">
+                                    {{ "%0.2f" % s.pe_ratio }}
+                                </td>
+                                <td class="{% if portfolio.average_eps > s.eps_ratio %}text-warning{% endif %}">
+                                    {{ s.eps_ratio }}
+                                </td>
+                                <td class="{% if s.trailing_average_div_yield > s.dividend_yield %}text-danger{% else %}text-success{% endif %}">
+                                    {{ s.dividend_yield | to_percentage }}
+                                </td>
                                 <td>{{ s.trailing_average_div_yield | to_percentage }}</td>
                                 <td>{{ "%0.2f" % s.beta }}</td>
                                 <td>{{ s.current_price | to_gbp_fmt }}</td>
@@ -139,7 +153,9 @@
                                 <td>{{ s.dividend_growth | to_percentage }}</td>
                                 <td>{{ "%0.2f" % s.dividend_ratios_per_year[0]["dividend_cover"] }}</td>
                                 <td>{{ "%0.2f" % s.dividend_ratios_per_year[0]["payout_ratio"] }}</td>
-                                <td>{{ s.cadi }}</td>
+                                <td class="{% if s.cadi > 10 %}text-success{% endif %}">
+                                    {{ s.cadi }}
+                                </td>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -147,35 +163,52 @@
                         <tfoot>
                             <tr class="fw-bold">
                                 <td>Total</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
+                                <td>{{ (portfolio.average_market_cap / 1_000_000) | to_int | to_gbp_fmt }}</td>
+                                <td>{{ "%0.2f" % portfolio.average_pe }}</td>
+                                <td>{{ "%0.2f" % portfolio.average_eps }}</td>
                                 <td>{{ portfolio.average_dividend_yield | to_percentage }}</td>
                                 <td></td>
+                                <td class="{% if portfolio.average_beta < 1 %}text-success{% endif %}">
+                                    {{ "%0.2f" % portfolio.average_beta }}
+                                </td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
-                                <td></td>
+                                <td class="{% if portfolio.average_cadi > 10 %}text-success{% endif %}">
+                                    {{ portfolio.average_cadi | to_int }}
+                                </td>
                             </tr>
                         </tfoot>
                     </table>
                 </div>
 
-                <h2 class="mb-2">Weighting</h2>
+                <h2 class="mb-2" id="weighting">
+                    Weighting
+                    <a href="#weighting"><i class="bi bi-link-45deg"></i></a>
+                </h2>
 
-                <h3 class="mb-2">Equal weighted</h3>
+                <h3 class="mb-2" id="equal-weighted">
+                    Equal weighted
+                    <a href="#equal-weighted"><i class="bi bi-link-45deg"></i></a>
+                </h3>
 
                 {% include "weight_table.html" %}
 
-                <h3 class="mb-2">Market cap weighted</h3>
+                <h3 class="mb-2" id="market-cap-weighted">
+                    Market cap weighted
+                    <a href="#market-cap-weighted"><i class="bi bi-link-45deg"></i></a>
+                </h3>
 
                 {% with weight="market_cap" %}
                     {% include "weight_table.html" %}
                 {% endwith %}
 
-                <h3 class="mb-2">Dividend yield weighted</h3>
+                <h3 class="mb-2" id="dividend-yield-weighted">
+                    Dividend yield weighted
+                    <a href="#dividend-yield-weighted"><i class="bi bi-link-45deg"></i></a>
+                </h3>
 
                 {% set total_amount = namespace(value=0) %}
                 {% set total_return = namespace(value=0) %}
@@ -184,7 +217,10 @@
                     {% include "weight_table.html" %}
                 {% endwith %}
 
-                <h2 class="mb-2">Projections</h2>
+                <h2 class="mb-2" id="projections">
+                    Projections
+                    <a href="#projections"><i class="bi bi-link-45deg"></i></a>
+                </h2>
                 
                 {% set total_invested = namespace(value=0) %}
 
@@ -229,7 +265,10 @@
                     </table>
                 </div>
 
-                <h2 class="mb-2">Dividend calendar</h2>
+                <h2 class="mb-2" id="dividend-calendar">
+                    Dividend calendar
+                    <a href="#dividend-calendar"><i class="bi bi-link-45deg"></i></a>
+                </h2>
 
                 <div class="table-responsive">
                     <table class="table table-dark table-striped table-hover text-nowrap">

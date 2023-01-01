@@ -10,6 +10,21 @@ class Portfolio:
     def get_average_dividend_yield(self) -> float:
         return sum([t.get_dividend_yield() for t in self.tickers]) / len(self.tickers)
 
+    def get_average_market_cap(self) -> float:
+        return sum([t.get_market_cap() for t in self.tickers]) / len(self.tickers)
+
+    def get_average_pe(self) -> float:
+        return sum([t.get_pe_ratio() for t in self.tickers]) / len(self.tickers)
+
+    def get_average_eps(self) -> float:
+        return sum([t.get_eps_ratio() for t in self.tickers]) / len(self.tickers)
+
+    def get_average_beta(self) -> float:
+        return sum([t.get_beta() for t in self.tickers]) / len(self.tickers)
+
+    def get_average_cadi(self) -> float:
+        return sum([t.get_cadi() for t in self.tickers]) / len(self.tickers)
+
     def project(self, years: int, invest_per_year: int) -> List[Dict[str, Any]]:
         result = []
 

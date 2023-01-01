@@ -88,7 +88,14 @@ def get_portfolio(portfolio_id: str):
         amount=amount,
         portfolio_id=portfolio_id,
         stocks=stocks,
-        portfolio={"average_dividend_yield": portfolio.get_average_dividend_yield()},
+        portfolio={
+            "average_dividend_yield": portfolio.get_average_dividend_yield(),
+            "average_market_cap": portfolio.get_average_market_cap(),
+            "average_pe": portfolio.get_average_pe(),
+            "average_eps": portfolio.get_average_eps(),
+            "average_beta": portfolio.get_average_beta(),
+            "average_cadi": portfolio.get_average_cadi(),
+        },
         projections=portfolio.project(22, amount),
     )
 
