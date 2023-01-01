@@ -137,6 +137,8 @@ def remove_symbol(symbol: str):
         else ["ADM.L", "TSCO.L"]
     )
 
+    assert len(symbols) > 1, "Portfolio must have at least one stock"
+
     if symbol in symbols:
         symbols.remove(symbol)
 
