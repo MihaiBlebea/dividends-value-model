@@ -5,9 +5,10 @@ import time
 import os
 from deta import Drive
 from currency_converter import CurrencyConverter, SINGLE_DAY_ECB_URL
+from datetime import datetime
 
-
-cc = CurrencyConverter(SINGLE_DAY_ECB_URL)
+# TODO: Update SSL cert for currency converter
+# cc = CurrencyConverter(SINGLE_DAY_ECB_URL)
 
 
 DETA_DRIVER_NAME = "dividend-calculator"
@@ -102,4 +103,29 @@ def to_GBP(amount: float, from_currency: str) -> float:
     if from_currency == "GBp":
         return amount / 100
 
-    return cc.convert(amount, from_currency, "GBP")
+    return amount
+
+    # TODO: enable currency converter after fixing the SSL cert issue
+    # return cc.convert(amount, from_currency, "GBP")
+
+
+def to_percentage(value: float) -> str:
+    return f"{round(value * 100, 2)}%"
+
+
+def to_gbp_fmt(value: float) -> str:
+    value: str = "{:20,.2f}".format(value).strip()
+    if ".00" in value:
+        value = value.replace(".00", "")
+
+    return "£" + value
+
+
+def to_int(value: float) -> int:
+    return int(value)
+
+
+def to_date(value: int) -> str:
+    if value is None:
+        return ""
+    return datetime.fromtimestamp(value).strftime("%d-%m-%Y")

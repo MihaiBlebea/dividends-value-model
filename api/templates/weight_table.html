@@ -1,0 +1,58 @@
+
+{% set total_amount = namespace(value=0) %}
+{% set total_return = namespace(value=0) %}
+{% set total_percentage = namespace(value=0) %}
+
+{% if weight == "dividend_yield" %}
+    {% set colour = "table-success" %}
+{% elif weight == "market_cap" %}
+    {% set colour = "table-primary" %}
+{% else %}
+    {% set colour = "table-danger" %}
+{% endif %}
+
+<div class="table-responsive">
+    <table class="table {{ colour }} table-striped table-hover text-nowrap">
+        <thead>
+            <tr>
+                <td>Company</td>
+                <td>Weight</td>
+                <td>Invested</td>
+                <td>Shares</td>
+                <td>Return per year</td>
+            </tr>
+        </thead>
+        <tbody>
+            {% for s in stocks %}
+                {% if weight == "dividend_yield" %}
+                    {% set weight = s.div_yield_weight %}
+                {% elif weight == "market_cap" %}
+                    {% set weight = s.market_cap_weight %}
+                {% else %}
+                    {% set weight = s.equal_weight %}
+                {% endif %}
+
+                <tr class="table-active">
+                    <td>{{ s.company_name }}</td>
+                    <td>{{ weight | to_percentage }}</td>
+                    <td>{{ (amount * weight) | to_gbp_fmt }}</td>
+                    <td>{{ (amount * weight / s.current_price) | to_int }}</td>
+                    <td>{{ (amount * weight * s.dividend_yield) | to_gbp_fmt }}</td>
+                </tr>
+
+                {% set total_amount.value = total_amount.value + amount * s.div_yield_weight %}
+                {% set total_return.value = total_return.value + amount * weight * s.dividend_yield %}
+                {% set total_percentage.value = total_percentage.value + weight %}
+            {% endfor %}
+            <tfoot>
+                <tr class="fw-bold">
+                    <td>Total</td>
+                    <td>{{ total_percentage.value | to_int | to_percentage }}</td>
+                    <td>{{ total_amount.value | to_gbp_fmt }}</td>
+                    <td></td>
+                    <td>{{ total_return.value | to_gbp_fmt }}</td>
+                </tr>
+            </tfoot>
+        </tbody>
+    </table>
+</div>
