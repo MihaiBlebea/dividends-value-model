@@ -65,7 +65,7 @@
                 <div class="mb-4 d-flex">
                 {% for s in stocks %}
                     <form class="me-2" action="/webapp/portfolio/remove/{{ s.symbol }}{{ request.url.replace(request.base_url, '') }}" method="POST">
-                        <button class="btn btn-primary btn-sm">{{ s.symbol }}</button>
+                        <button class="btn btn-primary btn-sm">{{ s.symbol }} <i class="bi bi-backspace"></i></button>
                     </form>
                 {% endfor %}
                 </div>
@@ -73,7 +73,7 @@
                 <div class="mb-4">
                     {% if stocks | length < 10 %}
                     <div class="alert alert-danger" role="alert">
-                        Portfolio only has {{ stocks | length }} stocks. You need at least 10 for good diversification.
+                        <i class="bi bi-exclamation-triangle"></i> Portfolio only has {{ stocks | length }} stocks. You need at least 10 for good diversification.
                     </div>
                     {% endif %}
                 </div>
