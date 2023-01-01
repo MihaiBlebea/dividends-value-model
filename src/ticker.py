@@ -6,13 +6,23 @@ from src.utils import calc_percentage_diff
 
 
 class Ticker:
+
+    ticker_info = None
+
+    historic_prices = None
+
+    historic_dividends = None
+
     def __init__(self, symbol: str, yahoo_finance: YahooFinance = None) -> None:
         self.symbol = symbol
         self.yf = YahooFinance() if yahoo_finance is None else yahoo_finance
 
     def get_company_name(self) -> str:
+        if self.ticker_info is None:
+            self.ticker_info = self.yf.get_ticker_info(self.symbol)
+
         return safeget(
-            self.yf.get_ticker_info(self.symbol),
+            self.ticker_info,
             "quoteSummary",
             "result",
             0,
@@ -21,8 +31,11 @@ class Ticker:
         )
 
     def get_dividend_yield(self) -> float:
+        if self.ticker_info is None:
+            self.ticker_info = self.yf.get_ticker_info(self.symbol)
+
         return safeget(
-            self.yf.get_ticker_info(self.symbol),
+            self.ticker_info,
             "quoteSummary",
             "result",
             0,
@@ -32,8 +45,11 @@ class Ticker:
         )
 
     def get_industry(self) -> str:
+        if self.ticker_info is None:
+            self.ticker_info = self.yf.get_ticker_info(self.symbol)
+
         return safeget(
-            self.yf.get_ticker_info(self.symbol),
+            self.ticker_info,
             "quoteSummary",
             "result",
             0,
@@ -42,8 +58,11 @@ class Ticker:
         )
 
     def get_sector(self) -> str:
+        if self.ticker_info is None:
+            self.ticker_info = self.yf.get_ticker_info(self.symbol)
+
         return safeget(
-            self.yf.get_ticker_info(self.symbol),
+            self.ticker_info,
             "quoteSummary",
             "result",
             0,
@@ -52,26 +71,41 @@ class Ticker:
         )
 
     def get_dividend_yield(self) -> float:
-        data = self.yf.get_ticker_info(self.symbol)
+        if self.ticker_info is None:
+            self.ticker_info = self.yf.get_ticker_info(self.symbol)
 
         div_yield = safeget(
-            data, "quoteSummary", "result", 0, "summaryDetail", "dividendYield", "raw"
+            self.ticker_info,
+            "quoteSummary",
+            "result",
+            0,
+            "summaryDetail",
+            "dividendYield",
+            "raw",
         )
 
         return div_yield if div_yield is not None else 0
 
     def get_beta(self) -> float:
-        data = self.yf.get_ticker_info(self.symbol)
+        if self.ticker_info is None:
+            self.ticker_info = self.yf.get_ticker_info(self.symbol)
 
         return safeget(
-            data, "quoteSummary", "result", 0, "defaultKeyStatistics", "beta", "raw"
+            self.ticker_info,
+            "quoteSummary",
+            "result",
+            0,
+            "defaultKeyStatistics",
+            "beta",
+            "raw",
         )
 
     def get_market_cap(self) -> float:
-        data = self.yf.get_ticker_info(self.symbol)
+        if self.ticker_info is None:
+            self.ticker_info = self.yf.get_ticker_info(self.symbol)
 
         return safeget(
-            data,
+            self.ticker_info,
             "quoteSummary",
             "result",
             0,
@@ -81,10 +115,11 @@ class Ticker:
         )
 
     def get_pe_ratio(self) -> float:
-        data = self.yf.get_ticker_info(self.symbol)
+        if self.ticker_info is None:
+            self.ticker_info = self.yf.get_ticker_info(self.symbol)
 
         return safeget(
-            data,
+            self.ticker_info,
             "quoteSummary",
             "result",
             0,
@@ -94,10 +129,11 @@ class Ticker:
         )
 
     def get_eps_ratio(self) -> float:
-        data = self.yf.get_ticker_info(self.symbol)
+        if self.ticker_info is None:
+            self.ticker_info = self.yf.get_ticker_info(self.symbol)
 
         return safeget(
-            data,
+            self.ticker_info,
             "quoteSummary",
             "result",
             0,
@@ -107,13 +143,38 @@ class Ticker:
         )
 
     def get_current_price(self) -> float:
-        return self.yf.get_current_price(self.symbol)
+        if self.ticker_info is None:
+            self.ticker_info = self.yf.get_ticker_info(self.symbol)
+
+        return safeget(
+            self.ticker_info,
+            "quoteSummary",
+            "result",
+            0,
+            "price",
+            "regularMarketPrice",
+            "raw",
+        )
+
+    def get_currency(self) -> str:
+        if self.ticker_info is None:
+            self.ticker_info = self.yf.get_ticker_info(self.symbol)
+
+        return safeget(
+            self.ticker_info,
+            "quoteSummary",
+            "result",
+            0,
+            "summaryDetail",
+            "currency",
+        )
 
     def get_yearly_ratios(self) -> list:
-        data = self.yf.get_ticker_info(self.symbol)
+        if self.ticker_info is None:
+            self.ticker_info = self.yf.get_ticker_info(self.symbol)
 
         statements = safeget(
-            data,
+            self.ticker_info,
             "quoteSummary",
             "result",
             0,
@@ -143,10 +204,12 @@ class Ticker:
         return last_year_div_amount + (last_year_div_amount * dividend_growth)
 
     def get_dividends_per_year(self) -> Dict[int, float]:
-        data = self.yf.get_historic_dividends(self.symbol)
+        if self.historic_dividends is None:
+            self.historic_dividends = self.yf.get_historic_dividends(self.symbol)
+
         current_year = datetime.now().year
         dividends = {}
-        for d in data:
+        for d in self.historic_dividends:
             dt = datetime.fromtimestamp(d["date"])
             if dt.year == current_year:
                 continue
@@ -178,10 +241,11 @@ class Ticker:
         return round(total_growth / len(dividends), 4)
 
     def get_trailing_average_div_yield(self) -> float:
-        data = self.yf.get_ticker_info(self.symbol)
+        if self.ticker_info is None:
+            self.ticker_info = self.yf.get_ticker_info(self.symbol)
 
         trailing_div_yield = safeget(
-            data,
+            self.ticker_info,
             "quoteSummary",
             "result",
             0,
@@ -212,15 +276,29 @@ class Ticker:
         return cadi
 
     def get_ex_dividend_date(self) -> int:
-        data = self.yf.get_ticker_info(self.symbol)
+        if self.ticker_info is None:
+            self.ticker_info = self.yf.get_ticker_info(self.symbol)
 
         return safeget(
-            data, "quoteSummary", "result", 0, "calendarEvents", "exDividendDate", "raw"
+            self.ticker_info,
+            "quoteSummary",
+            "result",
+            0,
+            "calendarEvents",
+            "exDividendDate",
+            "raw",
         )
 
     def get_next_dividend_date(self) -> int:
-        data = self.yf.get_ticker_info(self.symbol)
+        if self.ticker_info is None:
+            self.ticker_info = self.yf.get_ticker_info(self.symbol)
 
         return safeget(
-            data, "quoteSummary", "result", 0, "calendarEvents", "dividendDate", "raw"
+            self.ticker_info,
+            "quoteSummary",
+            "result",
+            0,
+            "calendarEvents",
+            "dividendDate",
+            "raw",
         )

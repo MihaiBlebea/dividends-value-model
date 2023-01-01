@@ -47,6 +47,7 @@ def cache_factory(cache_dir: str, file_prefix: str, ttl_sec: int):
                 drive = Drive(DETA_DRIVER_NAME)
                 file = drive.get(deta_file)
                 if file is not None:
+                    print(f"Fetching {deta_file} from cache.")
                     return json.loads(file.read())
 
             if cache_file_path.is_file():
@@ -60,6 +61,7 @@ def cache_factory(cache_dir: str, file_prefix: str, ttl_sec: int):
                         return json.loads(file.read())
 
             # print("Get data from source")
+            print(f"Fetching {cache_file_path} from source")
             result = func(*args, **kwargs)
 
             # Check if this is running on Deta
