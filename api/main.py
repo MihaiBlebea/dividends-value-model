@@ -1,6 +1,4 @@
 from flask import Flask, jsonify, request, render_template, redirect
-from src.dividend_indicator import DividendIndicator
-from src.dividend_calculator import DividendCalculator
 from src.ticker import Ticker
 from src.portfolio import Portfolio
 from src.utils import to_percentage, to_gbp_fmt, to_int, to_date
@@ -154,81 +152,11 @@ def remove_symbol(symbol: str):
     )
 
 
-@app.route(f"{API_V1}/dividends/<symbol>/future-earnings", methods=["GET"])
-def get_future_earnings(symbol: str):
-    try:
-        args = request.args
-        invest_amount = args.get("invest-amount", type=float, default=20_000)
-        years = args.get("years", type=int, default=10)
-        reinvest_dividends = args.get("reinvest-dividends", type=bool, default=True)
-        reinvest_annualy = args.get("reinvest-annualy", type=bool, default=True)
-
-        dc = DividendCalculator(symbol)
-        result = dc.predict_future_earnings(
-            invest_amount,
-            years,
-            reinvest_dividends,
-            reinvest_annualy,
-        )
-
-        return jsonify({"status": "OK", "data": result}), 200
-    except Exception as err:
-        return jsonify({"status": "ERROR", "error": str(err)}), 500
-
-
-@app.route(f"{API_V1}/dividends/<symbol>/dividends-per-month", methods=["GET"])
-def get_invest_for_dividend_per_month(symbol: str):
-    try:
-        args = request.args
-        dividend_per_month = args.get("dividend-per-month", type=float, default=1_000)
-        dc = DividendCalculator(symbol)
-        return (
-            jsonify(
-                {
-                    "status": "OK",
-                    "data": dc.invest_for_dividend_per_month(dividend_per_month),
-                }
-            ),
-            200,
-        )
-    except Exception as err:
-        return jsonify({"status": "ERROR", "error": str(err)}), 500
-
-
-@app.route(f"{API_V1}/dividends/<symbol>/years-till-recoup", methods=["GET"])
-def get_years_till_recoup_investment(symbol: str):
-    try:
-        dc = DividendCalculator(symbol)
-        return jsonify({"status": "OK", "data": dc.years_till_recoup_investment()}), 200
-    except Exception as err:
-        return jsonify({"status": "ERROR", "error": str(err)}), 500
-
-
 @app.route(f"{API_V1}/dividends/<symbol>/historic-per-year", methods=["GET"])
 def get_historic_per_year(symbol: str):
     try:
-        dc = DividendCalculator(symbol)
-        return jsonify({"status": "OK", "data": dc.get_dividends_per_year()}), 200
-    except Exception as err:
-        return jsonify({"status": "ERROR", "error": str(err)}), 500
-
-
-@app.route(f"{API_V1}/dividends/<symbol>/dividends-for-investment", methods=["GET"])
-def get_dividends_for_investment(symbol: str):
-    try:
-        args = request.args
-        invest_amount = args.get("invest-amount", type=float, default=20_000)
-
-        dc = DividendCalculator(symbol)
-        return (
-            jsonify(
-                {
-                    "status": "OK",
-                    "data": dc.dividends_for_amount_invested(invest_amount),
-                }
-            ),
-            200,
-        )
+        t = Ticker(symbol)
+        return jsonify({"status": "OK", "data": t.get_dividends_per_year()}), 200
     except Exception as err:
         return jsonify({"status": "ERROR", "error": str(err)}), 500
 
@@ -236,23 +164,22 @@ def get_dividends_for_investment(symbol: str):
 @app.route(f"{API_V1}/dividends/<symbol>/indicators", methods=["GET"])
 def get_indicators(symbol: str):
     try:
-        dc = DividendCalculator(symbol)
-        di = DividendIndicator(symbol)
+        t = Ticker(symbol)
         return (
             jsonify(
                 {
                     "status": "OK",
                     "data": {
-                        "dividend_yield": di.get_dividend_yield(),
-                        "current_price": di.get_current_price(),
-                        "current_dividend_amount": dc.current_year_div_per_share(),
-                        "dividend_growth": dc.get_yearly_dividend_growth(5),
-                        "dividend_ratios_per_year": di.get_yearly_ratios(),
-                        "cadi": dc.get_cadi(),
-                        "beta": di.get_beta(),
-                        "pe_ratio": di.get_pe_ratio(),
-                        "eps_ratio": di.get_eps_ratio(),
-                        "market_cap": di.get_market_cap(),
+                        "dividend_yield": t.get_dividend_yield(),
+                        "current_price": t.get_current_price(),
+                        "current_dividend_amount": t.current_year_div_per_share(),
+                        "dividend_growth": t.get_yearly_dividend_growth(5),
+                        "dividend_ratios_per_year": t.get_yearly_ratios(),
+                        "cadi": t.get_cadi(),
+                        "beta": t.get_beta(),
+                        "pe_ratio": t.get_pe_ratio(),
+                        "eps_ratio": t.get_eps_ratio(),
+                        "market_cap": t.get_market_cap(),
                     },
                 }
             ),

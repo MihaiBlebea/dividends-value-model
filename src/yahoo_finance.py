@@ -75,28 +75,28 @@ class YahooFinance:
 
         return prices
 
-    def get_currency(self, symbol: str) -> str:
-        return safeget(
-            self.get_ticker_info(symbol),
-            "quoteSummary",
-            "result",
-            0,
-            "summaryDetail",
-            "currency",
-        )
+    # def get_currency(self, symbol: str) -> str:
+    #     return safeget(
+    #         self.get_ticker_info(symbol),
+    #         "quoteSummary",
+    #         "result",
+    #         0,
+    #         "summaryDetail",
+    #         "currency",
+    #     )
 
-    def get_current_price(self, symbol: str) -> float:
-        price = safeget(
-            self.get_ticker_info(symbol),
-            "quoteSummary",
-            "result",
-            0,
-            "price",
-            "regularMarketPrice",
-            "raw",
-        )
+    # def get_current_price(self, symbol: str) -> float:
+    #     price = safeget(
+    #         self.get_ticker_info(symbol),
+    #         "quoteSummary",
+    #         "result",
+    #         0,
+    #         "price",
+    #         "regularMarketPrice",
+    #         "raw",
+    #     )
 
-        return to_GBP(price, self.get_currency(symbol))
+    #     return to_GBP(price, self.get_currency(symbol))
 
 
 if __name__ == "__main__":
