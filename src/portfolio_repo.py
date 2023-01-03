@@ -8,9 +8,13 @@ class PortfolioRepo:
         self.portfolio_table = Deta(os.getenv("DETA_PROJECT_KEY")).Base("portfolios")
 
     def save(self, portfolio: Portfolio) -> None:
-        self.portfolio_table.put(data=portfolio.to_list(), key=portfolio.id)
+        self.portfolio_table.put(
+            data={"symbols": portfolio.to_list()}, key=portfolio.id
+        )
 
     def get(self, id: str) -> Portfolio:
         item = self.portfolio_table.get(id)
+        if item is None:
+            return None
 
-        return Portfolio(item.value, item.id)
+        return Portfolio(item["symbols"], id)
