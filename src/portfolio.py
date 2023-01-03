@@ -1,10 +1,12 @@
 from typing import List, Dict, Any
 from src.ticker import Ticker
 from datetime import datetime
+import uuid
 
 
 class Portfolio:
-    def __init__(self, tickers: List[Ticker]) -> None:
+    def __init__(self, tickers: List[Ticker], id: str = None) -> None:
+        self.id = str(uuid.uuid4()) if id is None else id
         self.tickers = tickers
 
     def get_average_dividend_yield(self) -> float:
@@ -50,3 +52,6 @@ class Portfolio:
             )
 
         return result
+
+    def to_list(self) -> list:
+        return [t.symbol for t in self.tickers]

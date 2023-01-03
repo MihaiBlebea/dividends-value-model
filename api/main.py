@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, request, render_template, redirect
 from src.ticker import Ticker
 from src.portfolio import Portfolio
+from src.portfolio_repo import PortfolioRepo
 from src.utils import to_percentage, to_gbp_fmt, to_int, to_date
 
 
@@ -42,19 +43,24 @@ def index():
 @app.route("/webapp/<portfolio_id>", methods=["GET"])
 def get_portfolio(portfolio_id: str):
     args = request.args
-    amount = int(args.get("amount")) if args.get("amount") is not None else 1_000
-    symbols = (
-        args.get("symbols").split(",")
-        if args.get("symbols") is not None
-        else ["ADM.L", "TSCO.L"]
-    )
+    amount = int(args.get("amount", default=1_000))
 
-    tickers = [Ticker(symbol) for symbol in symbols]
+    symbols = args.get("symbols", default=None)
+
+    if symbols is None:
+        repo = PortfolioRepo()
+        portfolio = repo.get(portfolio_id)
+        tickers = portfolio.tickers
+    else:
+        symbols = symbols.split(",")
+        tickers = [Ticker(symbol) for symbol in symbols]
+        portfolio = Portfolio(tickers, portfolio_id)
+
+        repo = PortfolioRepo()
+        repo.save(portfolio)
 
     total_market_cap = sum([t.get_market_cap() for t in tickers])
     total_div_yield = sum([t.get_dividend_yield() for t in tickers])
-
-    portfolio = Portfolio(tickers)
 
     stocks = [
         {

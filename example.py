@@ -1,11 +1,21 @@
-from src.dividend_calculator import DividendCalculator
-from src.dividend_indicator import DividendIndicator
+from src.ticker import Ticker
+from src.portfolio_repo import PortfolioRepo
+from src.portfolio import Portfolio
+from dotenv import load_dotenv
+import os
 
 if __name__ == "__main__":
-	# dc = DividendCalculator("AAPL")
+    load_dotenv()
 
-	# print(dc.dividend_discount_model())
+    print(os.getenv("PYTHONHTTPSVERIFY"))
 
-	di = DividendIndicator("AAPL")
+    o = Ticker("O")
+    aapl = Ticker("AAPL")
 
-	print(di.get_beta())
+    port = Portfolio([o, aapl])
+
+    repo = PortfolioRepo()
+
+    repo.save(port)
+
+    # print(t.dividend_discount_model(0.08))
