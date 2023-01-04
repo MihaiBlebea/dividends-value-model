@@ -5,9 +5,12 @@ import uuid
 
 
 class Portfolio:
-    def __init__(self, tickers: List[Ticker], id: str = None) -> None:
+    def __init__(
+        self, tickers: List[Ticker], user_id: str = None, id: str = None
+    ) -> None:
         self.id = str(uuid.uuid4()) if id is None else id
         self.tickers = tickers
+        self.user_id = user_id
 
     def get_average_dividend_yield(self) -> float:
         return sum([t.get_dividend_yield() for t in self.tickers]) / len(self.tickers)

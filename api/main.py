@@ -75,7 +75,7 @@ def login_callback():
     try:
         # Get authorization code Google sent back to you
         code = request.args.get("code")
-
+        print(code)
         # Find out what URL to hit to get tokens that allow you to ask for
         # things on behalf of a user
         google_provider_cfg = get_google_provider_cfg()
@@ -122,6 +122,8 @@ def login_callback():
             id=unique_id, name=users_name, email=users_email, profile_pic=picture
         )
 
+        print(user)
+
         # Doesn't exist? Add to database
         if not User.get(unique_id):
             User.create(unique_id, users_name, users_email, picture)
@@ -133,6 +135,7 @@ def login_callback():
         return redirect(url_for("index"))
     except Exception as err:
         print(err)
+        return jsonify({"status": "ERROR", "error": str(err)}), 500
 
 
 @app.route("/logout", methods=["GET"])
@@ -146,17 +149,17 @@ def logout():
 def index():
     try:
         if current_user.is_authenticated:
-            print(current_user)
-            return (
-                "<p>Hello, {}! You're logged in! Email: {}</p>"
-                "<div><p>Google Profile Picture:</p>"
-                '<img src="{}" alt="Google profile pic"></img></div>'
-                '<a class="button" href="/logout">Logout</a>'.format(
-                    current_user.name, current_user.email, current_user.profile_pic
-                )
+
+            repo = PortfolioRepo()
+            portfolios = repo.find_with_user_id(current_user.id)
+            [print(p.id) for p in portfolios]
+            return render_template(
+                "index.html",
+                username=current_user.name,
+                portfolios=[{"id": p.id} for p in portfolios],
             )
         else:
-            return '<a class="button" href="/login">Google Login</a>'
+            return render_template("index.html")
     except Exception as err:
         print(err)
         return jsonify({"status": "ERROR", "error": str(err)}), 500
@@ -180,7 +183,7 @@ def get_portfolio(portfolio_id: str):
         else:
             symbols = symbols.split(",")
             tickers = [Ticker(symbol) for symbol in symbols]
-            portfolio = Portfolio(tickers, portfolio_id)
+            portfolio = Portfolio(tickers, current_user.id, portfolio_id)
 
             repo = PortfolioRepo()
             repo.save(portfolio)
