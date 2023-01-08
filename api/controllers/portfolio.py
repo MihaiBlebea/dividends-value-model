@@ -80,30 +80,45 @@ def get_portfolio(portfolio_id: str):
 
 
 @login_required
-def add_symbol():
-    args = request.args
-    amount = int(args.get("amount")) if args.get("amount") is not None else 1_000
-    symbols = (
-        args.get("symbols").split(",")
-        if args.get("symbols") is not None
-        else ["ADM.L", "TSCO.L"]
-    )
+def get_add_symbol():
+    try:
+        assert request.method == "GET", "This endpoint only supports GET requests."
 
-    symbol = request.form.get("symbol")
-    portfolio_id = request.form.get("portfolio_id")
-    assert symbol is not None, "Please provide a symbol"
+        args = request.args
+        portfolio_id = args.get("portfolio_id", default=None)
+        assert portfolio_id is not None, "Please provide a portfolio_id"
 
-    if symbol not in symbols:
-        symbols.append(symbol)
+        return render_template("add_symbol_form.html", portfolio_id=portfolio_id)
+    except Exception as err:
+        print(err)
+        return jsonify({"status": "ERROR", "error": str(err)}), 500
 
-    return redirect(
-        url_for(
-            "get_portfolio",
-            portfolio_id=portfolio_id,
-            amount=amount,
-            symbols=",".join(symbols),
-        )
-    )
+
+@login_required
+def post_add_symbol():
+    try:
+        assert request.method == "POST", "This endpoint only supports POST requests."
+
+        symbol = request.form.get("symbol", default=None)
+        portfolio_id = request.form.get("portfolio_id", default=None)
+
+        assert symbol is not None, "Please provide a symbol"
+        assert portfolio_id is not None, "Please provide a portfolio_id"
+
+        repo = PortfolioRepo()
+        portfolio = repo.get(portfolio_id)
+        assert portfolio is not None, "Could not find portfolio"
+        assert (
+            portfolio.user_id == current_user.id
+        ), "You don't own the portfolio that you try to update"
+
+        portfolio.append_ticker(Ticker(symbol))
+        repo.save(portfolio)
+
+        return redirect(url_for("get_portfolio", portfolio_id=portfolio_id))
+    except Exception as err:
+        print(err)
+        return jsonify({"status": "ERROR", "error": str(err)}), 500
 
 
 @login_required
@@ -112,17 +127,15 @@ def set_amount():
     amount = (
         int(request.form.get("amount")) if args.get("amount") is not None else 1_000
     )
-    symbols = args.get("symbols", default=None)
-    assert symbols is not None, "Please provide a symbol"
 
-    portfolio_id = request.form.get("portfolio_id")
+    portfolio_id = request.form.get("portfolio_id", default=None)
+    assert portfolio_id is not None, "Please provide a portfolio_id"
 
     return redirect(
         url_for(
             "get_portfolio",
             portfolio_id=portfolio_id,
             amount=amount,
-            symbols=symbols,
         )
     )
 
@@ -132,25 +145,26 @@ def remove_symbol(symbol: str):
     try:
         args = request.args
         amount = int(args.get("amount")) if args.get("amount") is not None else 1_000
-        symbols = (
-            args.get("symbols").split(",")
-            if args.get("symbols") is not None
-            else ["ADM.L", "TSCO.L"]
-        )
+        portfolio_id = request.form.get("portfolio_id", default=None)
+        assert portfolio_id is not None, "Please provide a portfolio_id"
 
-        assert len(symbols) > 1, "Portfolio must have at least one stock"
+        repo = PortfolioRepo()
+        portfolio = repo.get(portfolio_id)
+        assert portfolio is not None, "Could not find portfolio"
+        assert (
+            portfolio.user_id == current_user.id
+        ), "You don't own the portfolio that you try to update"
 
-        if symbol in symbols:
-            symbols.remove(symbol)
+        assert len(portfolio.tickers) > 1, "Portfolio must have at least one stock"
 
-        portfolio_id = request.form.get("portfolio_id")
+        portfolio.remove_ticker(Ticker(symbol))
+        repo.save(portfolio)
 
         return redirect(
             url_for(
                 "get_portfolio",
                 portfolio_id=portfolio_id,
                 amount=amount,
-                symbols=",".join(symbols),
             )
         )
     except Exception as err:

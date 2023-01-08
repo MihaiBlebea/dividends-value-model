@@ -58,3 +58,18 @@ class Portfolio:
 
     def to_list(self) -> list:
         return [t.symbol for t in self.tickers]
+
+    def append_ticker(self, ticker: Ticker) -> None:
+        for t in self.tickers:
+            if t.symbol == ticker.symbol:
+                return None
+
+        self.tickers.append(ticker)
+
+    def remove_ticker(self, ticker: Ticker) -> None:
+        result = []
+        for t in self.tickers:
+            if ticker.symbol != t.symbol:
+                result.append(t)
+
+        self.tickers = result

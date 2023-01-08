@@ -14,7 +14,8 @@ from src.utils import to_percentage, to_gbp_fmt, to_int, to_date
 from api.controllers.user import login, login_callback, logout
 from api.controllers.portfolio import (
     get_portfolio,
-    add_symbol,
+    get_add_symbol,
+    post_add_symbol,
     set_amount,
     remove_symbol,
 )
@@ -56,7 +57,8 @@ app.add_url_rule("/logout", methods=["GET"], view_func=logout)
 
 app.add_url_rule("/portfolio/<portfolio_id>", methods=["GET"], view_func=get_portfolio)
 
-app.add_url_rule("/portfolio/add", methods=["POST"], view_func=add_symbol)
+app.add_url_rule("/portfolio/add", methods=["GET"], view_func=get_add_symbol)
+app.add_url_rule("/portfolio/add", methods=["POST"], view_func=post_add_symbol)
 
 app.add_url_rule("/portfolio/amount", methods=["POST"], view_func=set_amount)
 
