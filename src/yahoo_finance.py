@@ -1,3 +1,4 @@
+from typing import List, Dict, Any
 import requests as re
 import time
 from datetime import datetime
@@ -74,6 +75,20 @@ class YahooFinance:
             )
 
         return prices
+
+    def search_ticker(self, query: str) -> List[Dict[str, Any]]:
+        url = "https://query1.finance.yahoo.com/v1/finance/search?q={query}"
+        res = re.get(
+            url.format(query=query),
+            headers={"user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64)"},
+        )
+
+        assert res.status_code == 200, f"Status code is {res.status_code}"
+
+        body = safeget(res.json(), "quotes")
+        assert body is not None, "Body of the response is null"
+
+        return body
 
 
 if __name__ == "__main__":

@@ -123,10 +123,8 @@ def post_add_symbol():
 
 @login_required
 def set_amount():
-    args = request.args
-    amount = (
-        int(request.form.get("amount")) if args.get("amount") is not None else 1_000
-    )
+    amount = int(request.form.get("amount"))
+    print(request.form.get("amount"))
 
     portfolio_id = request.form.get("portfolio_id", default=None)
     assert portfolio_id is not None, "Please provide a portfolio_id"

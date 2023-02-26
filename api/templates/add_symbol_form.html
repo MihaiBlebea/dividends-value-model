@@ -3,10 +3,12 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8" name="referrer" content="no-referrer">
 
 	<title>Add Symbol</title>
 
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.3.4/axios.min.js"></script>
 
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet">
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css" rel="stylesheet">
@@ -19,11 +21,20 @@
 			<div class="col-md-8">
 				<h1 class="mb-4">Add a new symbol to portfolio {{ portfolio_id }}</h1>
 
-                <form class="mb-4" action="/portfolio/add" method="POST">
+                <form class="mb-4" action="/portfolio/add" id="search-form" method="POST">
                     <div class="mb-3 row g-3 align-items-center justify-center">
                         <input type="hidden" name="portfolio_id" value="{{ portfolio_id }}">
                         <div class="col-auto">
-                            <input type="text" name="symbol" class="form-control" placeholder="stock symbol" required>
+                            <input
+                                onchange="searchSymbol()"
+                                onkeyup="searchSymbol()"
+                                type="text" 
+                                name="symbol" 
+                                id="search-query" 
+                                class="form-control" 
+                                placeholder="stock symbol" 
+                                required
+                            >
                         </div>
                         <div class="col-auto">
                             <button class="btn btn-primary btn-sm">Add</button>
@@ -31,9 +42,34 @@
                     </div>
                 </form>
 
+                <div id="search-results"></div>
+
 			</div>
 		</div>
 	</div>
+    <script>
+        const searchSymbol = () => {
+            let resultsDiv = document.getElementById("search-results")
+            let query = document.getElementById("search-query").value
+
+            axios.get("/ticker/search?query=" + query).then((result)=> {
+                resultsDiv.innerHTML = ""
+                result.data.results.forEach((r) => {
+                    let p = document.createElement("p")
+                    p.onclick = () => {
+                        document.getElementById("search-query").value = r.symbol
+                        document.getElementById("search-form").submit()
+                    }
+                    let text = document.createTextNode(r.longname + " (" + r.symbol + ")")
+                    p.appendChild(text)
+                    resultsDiv.appendChild(p)
+                })
+            }).catch((err)=> {
+                console.error(err)
+            })
+        }
+
+    </script>
 </body>
 
 </html>

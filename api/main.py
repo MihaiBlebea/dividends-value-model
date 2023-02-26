@@ -19,6 +19,7 @@ from api.controllers.portfolio import (
     set_amount,
     remove_symbol,
 )
+from api.controllers.ticker import get_ticker_info, search_ticker
 
 
 # Initiate the Flask app
@@ -65,6 +66,10 @@ app.add_url_rule("/portfolio/amount", methods=["POST"], view_func=set_amount)
 app.add_url_rule(
     "/portfolio/remove/<symbol>", methods=["POST"], view_func=remove_symbol
 )
+
+app.add_url_rule("/ticker/<symbol>", methods=["GET"], view_func=get_ticker_info)
+
+app.add_url_rule("/ticker/search", methods=["GET"], view_func=search_ticker)
 
 
 @app.route("/", methods=["GET"])

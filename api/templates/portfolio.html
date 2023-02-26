@@ -29,10 +29,11 @@
 
                 <p>Total amount invested {{ amount | to_gbp_fmt }}</p>
 
-                <a class="mb-2" href="/portfolio/add?portfolio_id={{ portfolio_id }}">
+                <a class="mb-2 d-block" href="/portfolio/add?portfolio_id={{ portfolio_id }}">
                     <button class="btn btn-primary btn-sm">Add symbol</button>
                 </a>
 
+                <p>Amount to invest per year:</p>
                 <form class="mb-4" id="amount-form" action="/portfolio/amount{{ request.url.replace(request.base_url, '') }}" method="POST">
                     <div class="mb-3 row g-3 align-items-center justify-center">
                         <input type="hidden" name="portfolio_id" value="{{ portfolio_id }}">
@@ -55,7 +56,6 @@
                 </form>
 
                 <hr/>
-
 
                 <div class="mb-4 row">
                 {% for s in stocks %}
@@ -93,7 +93,7 @@
                             <tbody>
                                 {% for s in stocks %}
                                 <tr class="table-active">
-                                    <td>{{ s.symbol }}</td>
+                                    <td><a href="/ticker/{{s.symbol}}" class="pointer" target="_blank">{{ s.symbol }}</a></td>
                                     <td>{{ s.company_name }}</td>
                                     <td>{{ s.industry }}</td>
                                     <td>{{ s.sector }}</td>

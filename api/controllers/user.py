@@ -6,6 +6,7 @@ from flask_login import (
     login_user,
     logout_user,
 )
+from datetime import timedelta
 from oauthlib.oauth2 import WebApplicationClient
 import requests as re
 from src.user import User
@@ -96,7 +97,7 @@ def login_callback():
             User.create(unique_id, users_name, users_email, picture)
 
         # Begin user session by logging the user in
-        login_user(user)
+        login_user(user, remember=True, duration=timedelta(days=7))
 
         # Send user back to homepage
         return redirect(url_for("index"))

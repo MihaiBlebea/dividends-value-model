@@ -70,6 +70,11 @@ class Ticker:
             "sector",
         )
 
+    def get_exchange_name(self) -> str:
+        return safeget(
+            self.ticker_info, "quoteSummary", "result", 0, "price", "exchange"
+        )
+
     def get_dividend_yield(self) -> float:
         if self.ticker_info is None:
             self.ticker_info = self.yf.get_ticker_info(self.symbol)
@@ -146,7 +151,7 @@ class Ticker:
         if self.ticker_info is None:
             self.ticker_info = self.yf.get_ticker_info(self.symbol)
 
-        return safeget(
+        price = safeget(
             self.ticker_info,
             "quoteSummary",
             "result",
@@ -155,6 +160,9 @@ class Ticker:
             "regularMarketPrice",
             "raw",
         )
+
+        # Price for London stock exchange is calculated in penny
+        return price / 100 if self.get_exchange_name() == "LSE" else price
 
     def get_currency(self) -> str:
         if self.ticker_info is None:
@@ -275,7 +283,7 @@ class Ticker:
 
         return cadi
 
-    def get_ex_dividend_date(self) -> int:
+    def get_ex_dividend_date(self, fmt: bool = False) -> int:
         if self.ticker_info is None:
             self.ticker_info = self.yf.get_ticker_info(self.symbol)
 
@@ -286,10 +294,10 @@ class Ticker:
             0,
             "calendarEvents",
             "exDividendDate",
-            "raw",
+            "fmt" if fmt else "raw",
         )
 
-    def get_next_dividend_date(self) -> int:
+    def get_next_dividend_date(self, fmt: bool = False) -> int:
         if self.ticker_info is None:
             self.ticker_info = self.yf.get_ticker_info(self.symbol)
 
@@ -300,13 +308,43 @@ class Ticker:
             0,
             "calendarEvents",
             "dividendDate",
-            "raw",
+            "fmt" if fmt else "raw",
         )
 
     def dividend_discount_model(self, ror: float = 0.1) -> float:
-        print(
-            self.current_year_div_per_share(), ror, self.get_yearly_dividend_growth(5)
+        current_dividend = self.get_dividend_yield() * self.get_current_price() / 100
+        return current_dividend / (ror - self.get_yearly_dividend_growth(10))
+
+    def dividend_discount_model_v2(
+        self, ror: float = 0.1, hold_years: int = 10
+    ) -> float:
+        current_dividend = self.get_dividend_yield() * self.get_current_price() / 100
+        discounted_dividends = []
+        for i in range(hold_years):
+            # print(i)
+            cv = current_dividend + (current_dividend * i) / (1 + ror) ** i
+            discounted_dividends.append(cv)
+
+        selling_price = self.get_current_price() / 100 + (
+            self.get_current_price() / 100 * ror
         )
-        return self.current_year_div_per_share() / (
-            ror - self.get_yearly_dividend_growth(5)
-        )
+        discounted_selling_price = selling_price / (1 + ror) ** hold_years
+        return sum(discounted_dividends) + discounted_selling_price
+
+
+if __name__ == "__main__":
+    from pprint import pprint
+
+    yf = YahooFinance()
+
+    tkr = Ticker("IMB.L", yf)
+
+    # pprint(tkr.get_ex_dividend_date(True))
+
+    # pprint(tkr.get_next_dividend_date(True))
+
+    # pprint(tkr.dividend_discount_model(0.1))
+
+    pprint(tkr.get_current_price() / 100)
+
+    pprint(tkr.dividend_discount_model_v2())
