@@ -99,8 +99,9 @@ def post_add_symbol():
     try:
         assert request.method == "POST", "This endpoint only supports POST requests."
 
-        symbol = request.form.get("symbol", default=None)
-        portfolio_id = request.form.get("portfolio_id", default=None)
+        args = request.args
+        portfolio_id = args.get("portfolio_id", default=None)
+        symbol = args.get("symbol", default=None)
 
         assert symbol is not None, "Please provide a symbol"
         assert portfolio_id is not None, "Please provide a portfolio_id"
