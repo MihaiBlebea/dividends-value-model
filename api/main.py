@@ -119,6 +119,7 @@ def get_indicators(symbol: str):
                         "beta": t.get_beta(),
                         "pe_ratio": t.get_pe_ratio(),
                         "eps_ratio": t.get_eps_ratio(),
+                        "peg_ratio": t.get_peg_ratio(),
                         "market_cap": t.get_market_cap(),
                         "debt_to_equity": t.get_debt_to_equity(),
                         "intrinsec_value": t.ratios_valuation_model(),

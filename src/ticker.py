@@ -298,6 +298,20 @@ class Ticker:
 
         return cadi
 
+    def get_peg_ratio(self) -> float:
+        if self.ticker_info is None:
+            self.ticker_info = self.yf.get_ticker_info(self.symbol)
+
+        return safeget(
+            self.ticker_info,
+            "quoteSummary",
+            "result",
+            0,
+            "defaultKeyStatistics",
+            "pegRatio",
+            "raw",
+        )
+
     def get_ex_dividend_date(self, fmt: bool = False) -> int:
         if self.ticker_info is None:
             self.ticker_info = self.yf.get_ticker_info(self.symbol)
@@ -347,16 +361,7 @@ class Ticker:
         return sum(discounted_dividends) + discounted_selling_price
 
     def ratios_valuation_model(self) -> float:
-        earnings = [r["net_income"] for r in self.get_yearly_ratios()]
-        peg = safeget(
-            self.ticker_info,
-            "quoteSummary",
-            "result",
-            0,
-            "defaultKeyStatistics",
-            "pegRatio",
-            "raw",
-        )
+        peg = self.get_peg_ratio()
         if peg is None:
             return None
 
