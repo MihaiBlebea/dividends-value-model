@@ -346,20 +346,38 @@ class Ticker:
         discounted_selling_price = selling_price / (1 + ror) ** hold_years
         return sum(discounted_dividends) + discounted_selling_price
 
+    def ratios_valuation_model(self) -> float:
+        earnings = [r["net_income"] for r in self.get_yearly_ratios()]
+        peg = safeget(
+            self.ticker_info,
+            "quoteSummary",
+            "result",
+            0,
+            "defaultKeyStatistics",
+            "pegRatio",
+            "raw",
+        )
+        if peg is None:
+            return None
+
+        peg = peg / 100
+
+        return self.get_eps_ratio() * (1 + peg) * self.get_pe_ratio()
+
 
 if __name__ == "__main__":
     from pprint import pprint
 
     yf = YahooFinance()
 
-    tkr = Ticker("IMB.L", yf)
+    tkr = Ticker("AAPL", yf)
 
-    # pprint(tkr.get_ex_dividend_date(True))
+    pprint(tkr.ratios_valuation_model())
 
     # pprint(tkr.get_next_dividend_date(True))
 
     # pprint(tkr.dividend_discount_model(0.1))
 
-    pprint(tkr.get_current_price() / 100)
+    pprint(tkr.get_current_price())
 
-    pprint(tkr.dividend_discount_model_v2())
+    # pprint(tkr.dividend_discount_model_v2())
